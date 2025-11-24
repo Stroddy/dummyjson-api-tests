@@ -9,25 +9,25 @@ Tests are implemented in Postman and cover positive, negative, and (for Login) p
 
 ## Structure
 
+```text
 dummyjson-api-tests/
-|-- 01-postman/
-|   `-- DummyJSON_Auth.postman_collection.json
-|-- 02-data/
-|-- 03-auth/
-|   |-- 01-Login/
-|   |   |-- Login CSV Data/
-|   |   |-- Positive cases/
-|   |   `-- Negative cases/
-|   |
-|   |-- 02-Get current User/
-|   |   |-- Positive cases/
-|   |   `-- Negative cases/
-|   |
-|   `-- 03-Refresh Token/
-|       |-- Positive cases/
-|       `-- Negative cases/
-|
-`-- README.md
+├─ 01-postman/
+│  └─ DummyJSON_Auth.postman_collection.json
+├─ 02-data/
+├─ 03-auth/
+│  ├─ 01-Login/
+│  │  ├─ Login CSV Data/
+│  │  ├─ Positive cases/
+│  │  └─ Negative cases/
+│  ├─ 02-Get current User/
+│  │  ├─ Positive cases/
+│  │  └─ Negative cases/
+│  └─ 03-Refresh Token/
+│     ├─ Positive cases/
+│     └─ Negative cases/
+└─ README.md
+```
+
 
 Word test scenario files are stored inside "Positive cases" and "Negative cases" folders for all modules.
 

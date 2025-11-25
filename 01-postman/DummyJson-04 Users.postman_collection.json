@@ -1,0 +1,269 @@
+{
+	"info": {
+		"_postman_id": "12ab8b6d-cc35-4730-bd82-87990f7eb6ac",
+		"name": "DummyJson-04 Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45742918",
+		"_collection_link": "https://ahmed-5241842.postman.co/workspace/Ahmed's-Workspace~ae2948d3-4c79-4522-87c0-63d9ef764ef2/collection/45742918-12ab8b6d-cc35-4730-bd82-87990f7eb6ac?action=share&source=collection_link&creator=45742918"
+	},
+	"item": [
+		{
+			"name": "Add a new user",
+			"item": [
+				{
+					"name": "201-Create a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Clinton\",\r\n    \"lastName\": \"Eastwood\",\r\n    \"age\": 95\r\n\r\n\r\n\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/users/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"users",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update a user",
+			"item": [
+				{
+					"name": "200-Update a user (valid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const req = JSON.parse(pm.request.body.raw);\r",
+									"const userIdFromUrl = pm.request.url.path[1];\r",
+									"// 1. Status code is 200\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. User ID matches URL\r",
+									"pm.test(\"User ID matches URL\", () => {\r",
+									"    pm.expect(res.id.toString()).to.eql(userIdFromUrl);\r",
+									"});\r",
+									"\r",
+									"// 3. Last name is updated\r",
+									"pm.test(\"Last name is updated\", () => {\r",
+									"    pm.expect(res.lastName).to.eql(req.lastName);\r",
+									"});\r",
+									"\r",
+									"// 4. Age is updated\r",
+									"pm.test(\"Age is updated\", () => {\r",
+									"    pm.expect(res.age).to.eql(req.age);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastName\" : \"1234ABC\",\r\n    \"age\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/users/200",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"users",
+								"200"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400-Update a user (invalid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const invalidId = pm.request.url.path[1];\r",
+									"// 1. Status code is 404\r",
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// 2. Response contains 'message' field\r",
+									"pm.test(\"Response contains 'message' field\", () => {\r",
+									"    pm.expect(res).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Error message contains correct user ID\r",
+									"pm.test(\"Error message contains correct user ID\", () => {\r",
+									"    pm.expect(res.message).to.eql(`User with id '${invalidId}' not found`);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastName\" : \"1234ABC\",\r\n    \"age\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/users/24565",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"users",
+								"24565"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete a user",
+			"item": [
+				{
+					"name": "200- Delete a user (valid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const userIdFromUrl = pm.request.url.path[1];\r",
+									"\r",
+									"// 1. Status code is 200\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. User ID matches URL\r",
+									"pm.test(\"User ID matches URL\", () => {\r",
+									"    pm.expect(res.id.toString()).to.eql(userIdFromUrl);\r",
+									"});\r",
+									"\r",
+									"// 3. User is marked as deleted\r",
+									"pm.test(\"User is marked as deleted\", () => {\r",
+									"    pm.expect(res.isDeleted).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// 4. 'deletedOn' property exists\r",
+									"pm.test(\"'deletedOn' property exists\", () => {\r",
+									"    pm.expect(res).to.have.property(\"deletedOn\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/users/1",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404- Delete a user (invalid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const invalidId = pm.request.url.path[1];\r",
+									"\r",
+									"// 1. Status code is 404\r",
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// 2. Response contains 'message' field\r",
+									"pm.test(\"Response contains 'message' field\", () => {\r",
+									"    pm.expect(res).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Error message contains correct user ID\r",
+									"pm.test(\"Error message contains correct user ID\", () => {\r",
+									"    pm.expect(res.message).to.eql(`User with id '${invalidId}' not found`);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/users/24565",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"users",
+								"24565"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

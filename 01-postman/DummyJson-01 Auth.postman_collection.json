@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "64e7d3c9-cd0a-4445-b213-139e4e22b03d",
-		"name": "DummyJson-Auth",
+		"name": "DummyJson-01 Auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "45742918",
 		"_collection_link": "https://ahmed-5241842.postman.co/workspace/Ahmed's-Workspace~ae2948d3-4c79-4522-87c0-63d9ef764ef2/collection/45742918-64e7d3c9-cd0a-4445-b213-139e4e22b03d?action=share&source=collection_link&creator=45742918"
@@ -1357,7 +1357,7 @@
 				"packages": {},
 				"requests": {},
 				"exec": [
-					"pm.collectionVariables.set(\"dummyURL\", \"https://dummyjson.com\");"
+					"pm.environment.set(\"dummyURL\", \"https://dummyjson.com\");"
 				]
 			}
 		},

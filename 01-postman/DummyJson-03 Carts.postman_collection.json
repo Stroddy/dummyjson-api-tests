@@ -1,0 +1,757 @@
+{
+	"info": {
+		"_postman_id": "62dbe7fd-c4b4-41b2-9eb6-1ac8d75938cb",
+		"name": "DummyJson-03 Carts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45742918",
+		"_collection_link": "https://ahmed-5241842.postman.co/workspace/Ahmed's-Workspace~ae2948d3-4c79-4522-87c0-63d9ef764ef2/collection/45742918-62dbe7fd-c4b4-41b2-9eb6-1ac8d75938cb?action=share&source=collection_link&creator=45742918"
+	},
+	"item": [
+		{
+			"name": "Get all carts",
+			"item": [
+				{
+					"name": "200 Get all carts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Carts array exists\", () => {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"carts\");\r",
+									"    pm.expect(json.carts).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time < 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/carts",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get a single cart",
+			"item": [
+				{
+					"name": "200-Get single cart (valid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/ Status check (200 OK)\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Cart ID matches ID in URL\r",
+									"pm.test(\"ID matches URL\", () => {\r",
+									"    const json = pm.response.json();\r",
+									"    const requestedId = parseInt(pm.request.url.path.slice(-1)[0]);\r",
+									"    pm.expect(json.id).to.eql(requestedId);\r",
+									"});\r",
+									"\r",
+									"// Products array exists\r",
+									"pm.test(\"Has products array\", () => {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"products\");\r",
+									"    pm.expect(json.products).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"// Every product contains 'id' field\r",
+									"pm.test(\"Each product has id\", () => {\r",
+									"    const json = pm.response.json();\r",
+									"    json.products.forEach(product => {\r",
+									"        pm.expect(product).to.have.property(\"id\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Response time < 1000ms\r",
+									"pm.test(\"Response time < 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/carts/1",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404-Get single cart (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Status check (404 Not Found)\r",
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// Error message check\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"message\");\r",
+									"    pm.expect(json.message.toLowerCase()).to.include(\"not found\");\r",
+									"});\r",
+									"\r",
+									"// Response time check\r",
+									"pm.test(\"Response time < 1000ms\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/carts/51",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"51"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Add a new cart",
+			"item": [
+				{
+					"name": "201-Create a cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const req = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// 1. Status-Check — response must be 201\r",
+									"pm.test(\"Status is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"// 2. Basic field check — cart has id\r",
+									"pm.test(\"Cart has id\", () => {\r",
+									"    pm.expect(res).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"// 3. Structure check — products is a non-empty array\r",
+									"pm.test(\"Products is a non-empty array\", () => {\r",
+									"    pm.expect(res).to.have.property(\"products\");\r",
+									"    pm.expect(res.products).to.be.an(\"array\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"// 4. Data check — first product id & quantity match request\r",
+									"pm.test(\"First product matches request (id & quantity)\", () => {\r",
+									"    pm.expect(res.products[0].id).to.eql(req.products[0].id);\r",
+									"    pm.expect(res.products[0].quantity).to.eql(req.products[0].quantity);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"products\": [\r\n        {\"id\":150,\r\n        \"quantity\":7},\r\n        {\"id\":178,\r\n        \"quantity\":3}\r\n        ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400- missing userID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// 2. Message property exists\r",
+									"pm.test(\"Response has 'message' property\", function () {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Correct error message\r",
+									"pm.test(\"Error: userId is required\", function () {\r",
+									"    pm.expect(body.message).to.eql(\"User id is required\"); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n    \"products\": [\r\n        {\"id\":150,\r\n        \"quantity\":7},\r\n        {\"id\":178,\r\n        \"quantity\":3}\r\n        ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400- invalid userID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"const req = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 400\", () => {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// 2. Message property exists\r",
+									"pm.test(\"Response has 'message' property\", () => {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Correct dynamic error message\r",
+									"pm.test(\"Error: userId is invalid with value\", () => {\r",
+									"    pm.expect(body.message).to.eql(`Invalid user id '${req.userId}'`);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"abc\",\r\n    \"products\": [\r\n        {\"id\":150,\r\n        \"quantity\":7},\r\n        {\"id\":178,\r\n        \"quantity\":3}\r\n        ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400- missing products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// 2. Message property exists\r",
+									"pm.test(\"Response has 'message' property\", function () {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Correct error message\r",
+									"pm.test(\"Error: userId is required\", function () {\r",
+									"    pm.expect(body.message).to.eql(\"products can not be empty\"); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "400- empty products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"// 2. Message property exists\r",
+									"pm.test(\"Response has 'message' property\", function () {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Correct error message\r",
+									"pm.test(\"Error: userId is required\", function () {\r",
+									"    pm.expect(body.message).to.eql(\"products can not be empty\"); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"products\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/add",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update a cart",
+			"item": [
+				{
+					"name": "200-Update a cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const req = JSON.parse(pm.request.body.raw);\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. Cart has id\r",
+									"pm.test(\"Cart has id\", () => {\r",
+									"    pm.expect(res).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"// 3. Products is non-empty array\r",
+									"pm.test(\"Products is non-empty array\", () => {\r",
+									"    pm.expect(res.products).to.be.an(\"array\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"// 4. First product matches request (id & quantity)\r",
+									"pm.test(\"First product matches request\", () => {\r",
+									"    pm.expect(res.products[0].id).to.eql(req.products[0].id);\r",
+									"    pm.expect(res.products[0].quantity).to.eql(req.products[0].quantity);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"products\": [\r\n    {\r\n    \"id\": 5,\r\n     \"quantity\": 1 \r\n     }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/1",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200-Update a cart (empty array)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"\r",
+									"// 1. Status-Check\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. Cart has id\r",
+									"pm.test(\"Cart has id\", () => {\r",
+									"    pm.expect(res).to.have.property(\"id\");\r",
+									"});\r",
+									"\r",
+									"// 3. Products is EMPTY array\r",
+									"pm.test(\"Products is empty array\", () => {\r",
+									"    pm.expect(res.products).to.be.an(\"array\").that.is.empty;\r",
+									"});\r",
+									"\r",
+									"// 4. Totals are zero\r",
+									"pm.test(\"Totals are zero\", () => {\r",
+									"    pm.expect(res.total).to.eql(0);\r",
+									"    pm.expect(res.totalQuantity).to.eql(0);\r",
+									"    pm.expect(res.totalProducts).to.eql(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"products\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/1",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404-Invalid cart ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"\r",
+									"// 1. Status code\r",
+									"pm.test(\"Status is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// 2. Response has 'message'\r",
+									"pm.test(\"Has message property\", () => {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Dynamic error text (ID из URL)\r",
+									"pm.test(\"Correct error message with ID\", () => {\r",
+									"    // Get ID from path\r",
+									"    const invalidId = pm.request.url.path[1];  // carts / {id}\r",
+									"    pm.expect(body.message).to.eql(`Cart with id '${invalidId}' not found`);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{dummyURL}}/carts/51",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"51"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delete a cart",
+			"item": [
+				{
+					"name": "200-Delete a cart (valid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();\r",
+									"const requestId = pm.request.url.path[1]; \r",
+									"\r",
+									"// 1. Status\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// 2. ID matches URL\r",
+									"pm.test(\"Cart id matches request URL\", () => {\r",
+									"    pm.expect(res.id.toString()).to.eql(requestId);\r",
+									"});\r",
+									"\r",
+									"// 3. isDeleted = true\r",
+									"pm.test(\"Cart is marked as deleted\", () => {\r",
+									"    pm.expect(res).to.have.property(\"isDeleted\");\r",
+									"    pm.expect(res.isDeleted).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// 4. deletedOn exists\r",
+									"pm.test(\"deletedOn timestamp exists\", () => {\r",
+									"    pm.expect(res).to.have.property(\"deletedOn\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/carts/1",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404-Delete a cart (invalid ID)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const body = pm.response.json();\r",
+									"\r",
+									"// 1. Status code\r",
+									"pm.test(\"Status code is 404\", () => {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// 2. Error message exists\r",
+									"pm.test(\"Has 'message' field\", () => {\r",
+									"    pm.expect(body).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"// 3. Dynamic message check\r",
+									"pm.test(\"Correct error message\", () => {\r",
+									"    const invalidId = pm.request.url.path[1];\r",
+									"    pm.expect(body.message).to.eql(`Cart with id '${invalidId}' not found`);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{dummyURL}}/carts/51",
+							"host": [
+								"{{dummyURL}}"
+							],
+							"path": [
+								"carts",
+								"51"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

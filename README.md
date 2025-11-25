@@ -160,11 +160,11 @@ In **Collection Runner**:
 
 ---
 
-## Notes & Future Work
 
-- Repository focuses on Postman manual/automated API test design.  
-- Negative scenarios are based on actual DummyJSON behavior.  
-- Potential next steps:
-  - Add Newman CLI  
-  - Add automated Rest Assured project  
-  - Expand datasets for edge cases  
+## Notes
+
+- This repository contains structured Postman test collections for the DummyJSON API.
+- All tests are based strictly on the real behavior of the service (no imaginary or invented checks).
+- Collections include clear positive and negative scenarios for each covered module.
+- The Auth module also includes CSV-driven parametrized login tests.
+- A Rest Assured automation project may be added later.
